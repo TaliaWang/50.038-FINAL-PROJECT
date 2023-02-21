@@ -1,4 +1,3 @@
-/outputs
-/runs
-/MNIST
-/cache_dir
+**/outputs
+**/runs
+**/cache_dir
