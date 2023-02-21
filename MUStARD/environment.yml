@@ -3,7 +3,7 @@ dependencies:
   - pip:
     -            jsonlines==1.2.0
     -            overrides==1.9
-  -              cudatoolkit=10.0
+  -              cudatoolkit=9.0 # note 10.0 originally
   -              ffmpeg=4.0
   -              h5py=2.9.0
   - conda-forge::librosa=0.6.2
