@@ -23,8 +23,8 @@ f = h5py.File('./MUStARD/data/features/context_final/resnet_pool5.hdf5', 'r')
 # print(np.shape(f['1_507'][()]))
 
 ### MNIST DATASET ###
-f = h5py.File('./MUStARD/data/features/context_final/resnet_pool5.hdf5', 'r')
-# print(list(f.keys()))
+f = h5py.File('./MNIST/test.hdf5', 'r')
+print(np.shape(f['image'][...]))
 
 # TODO: QUESTIONS
 # What does each entry in the numpy array represent?
