@@ -1,0 +1,85 @@
+Args: Namespace(config_key='')
+Present Fold: 1
+Vocab size: 1702
+Loading the GloVe model…
+[[54 10]
+ [23 51]]
+              precision    recall  f1-score   support
+
+           0      0.701     0.844     0.766        64
+           1      0.836     0.689     0.756        74
+
+    accuracy                          0.761       138
+   macro avg      0.769     0.766     0.761       138
+weighted avg      0.774     0.761     0.760       138
+
+Present Fold: 2
+Vocab size: 1684
+Loading the GloVe model…
+[[49 18]
+ [24 47]]
+              precision    recall  f1-score   support
+
+           0      0.671     0.731     0.700        67
+           1      0.723     0.662     0.691        71
+
+    accuracy                          0.696       138
+   macro avg      0.697     0.697     0.696       138
+weighted avg      0.698     0.696     0.695       138
+
+Present Fold: 3
+Vocab size: 1713
+Loading the GloVe model…
+[[53 22]
+ [19 44]]
+              precision    recall  f1-score   support
+
+           0      0.736     0.707     0.721        75
+           1      0.667     0.698     0.682        63
+
+    accuracy                          0.703       138
+   macro avg      0.701     0.703     0.702       138
+weighted avg      0.704     0.703     0.703       138
+
+Present Fold: 4
+Vocab size: 1727
+Loading the GloVe model…
+[[42 20]
+ [25 51]]
+              precision    recall  f1-score   support
+
+           0      0.627     0.677     0.651        62
+           1      0.718     0.671     0.694        76
+
+    accuracy                          0.674       138
+   macro avg      0.673     0.674     0.673       138
+weighted avg      0.677     0.674     0.675       138
+
+Present Fold: 5
+Vocab size: 1758
+Loading the GloVe model…
+[[57 20]
+ [16 45]]
+              precision    recall  f1-score   support
+
+           0      0.781     0.740     0.760        77
+           1      0.692     0.738     0.714        61
+
+    accuracy                          0.739       138
+   macro avg      0.737     0.739     0.737       138
+weighted avg      0.742     0.739     0.740       138
+
+####################
+Fold 1:
+Weighted Precision: 0.7735649952328498  Weighted Recall: 0.7608695652173914  Weighted F score: 0.7603796210641725
+Fold 2:
+Weighted Precision: 0.6979062628854171  Weighted Recall: 0.6956521739130435  Weighted F score: 0.6954603580562659
+Fold 3:
+Weighted Precision: 0.7044082125603865  Weighted Recall: 0.7028985507246377  Weighted F score: 0.7033215712978822
+Fold 4:
+Weighted Precision: 0.6772262386780122  Weighted Recall: 0.6739130434782609  Weighted F score: 0.6746868616000495
+Fold 5:
+Weighted Precision: 0.7416960645072616  Weighted Recall: 0.7391304347826086  Weighted F score: 0.739792960662526
+####################
+Avg :
+Weighted Precision: 0.719  Weighted Recall: 0.714  Weighted F score: 0.715

@@ -1,3 +1,6 @@
 **/outputs
 **/runs
 **/cache_dir
+**/__pycache__
+**/output
+.DS_Store
