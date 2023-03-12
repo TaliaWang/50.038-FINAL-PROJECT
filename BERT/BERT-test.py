@@ -11,8 +11,8 @@ import matplotlib.pyplot as plot
 class BERT_Model:
     # size is number of either positive or negative examples (both should be same size based on original dataset)
     # so, actual sizes are twice of those indicated
-    DEFAULT_VALIDATE_SIZE = 20
-    DEFAULT_TEST_SIZE = 20
+    DEFAULT_VALIDATE_SIZE = 65 # observed optimal split
+    DEFAULT_TEST_SIZE = 65 # observed optimal split
     def __init__(self, validate_size=DEFAULT_VALIDATE_SIZE, test_size=DEFAULT_TEST_SIZE):
         self.df = pd.read_json("../MUStARD/data/sarcasm_data.json")
         self.df = self.df.transpose()
@@ -33,8 +33,10 @@ class BERT_Model:
         self.train_size = len(self.positive_df) - self.validate_size - self.test_size
 
         self.train_df = pd.concat([self.positive_df[:self.train_size], self.negative_df[:self.train_size]])
-        self.validate_df = pd.concat([self.positive_df[self.train_size:self.train_size+self.validate_size], self.negative_df[self.train_size:self.train_size+self.validate_size]])
-        self.test_df = pd.concat([self.positive_df[self.train_size+self.validate_size:len(self.positive_df)], self.negative_df[self.train_size+self.validate_size:len(self.negative_df)]])
+        self.validate_df = pd.concat([self.positive_df[self.train_size:self.train_size+self.validate_size], 
+                                      self.negative_df[self.train_size:self.train_size+self.validate_size]])
+        self.test_df = pd.concat([self.positive_df[self.train_size+self.validate_size:len(self.positive_df)], 
+                                  self.negative_df[self.train_size+self.validate_size:len(self.negative_df)]])
 
 
     def graph_examples_distribution(self):
@@ -46,7 +48,7 @@ class BERT_Model:
         
     def train_model(self, train_args):
         # We use the RoBERTa base pre-trained model.
-        model = ClassificationModel('roberta', 'roberta-base', num_labels=2, args=train_args, use_cuda=False) 
+        model = ClassificationModel('bert', 'bert-base-uncased', num_labels=2, args=train_args, use_cuda=False) 
 
         # Train the model, use the validate set as the development set as per the paper.
         # When training to 1 epoch this is not that essential, however, if you decide to 
@@ -60,7 +62,7 @@ class BERT_Model:
         return result, model_outputs, wrong_predictions
 
     def train_with_varied_learning_rates(self, train_args):
-        learning_rates = np.arange(0.00001, 0.01, 0.0005)
+        learning_rates = np.arange(0.00001, 0.0001, 0.00001)
         accuracies = []
         aurocs = []
         auprcs = []
@@ -88,6 +90,22 @@ class BERT_Model:
 
         graph_hyperparam("Number of epochs", num_train_epochs, accuracies, aurocs, auprcs)
 
+    
+    def train_optimal(self, num_iterations, train_args):
+      train_args['learning_rate'] = 0.00006
+      train_args['num_train_epochs'] = 3
+      accuracies = []
+      aurocs = []
+      auprcs = []
+      for i in range(num_iterations):
+          result, model_outputs, wrong_predictions = self.train_model(train_args)
+          accuracies.append(result['acc'])
+          aurocs.append(result['auroc'])
+          auprcs.append(result['auprc'])    
+
+      print("Average accuracy: ", sum(accuracies)/len(accuracies))
+      graph_hyperparam("Iteration", np.arange(1, num_iterations+1, 1), accuracies, aurocs, auprcs)        
+
 # ----- end of class
 
 
@@ -109,7 +127,7 @@ def graph_hyperparam(hyperparam_label, hyperparam, accuracies, aurocs, auprcs):
 
 # note: actual sizes are twice those indicated
 def train_with_varied_test_validate_sizes(train_args):
-    sizes = np.arange(5, 60, 10)
+    sizes = np.arange(5, 100, 10)
     accuracies = []
     aurocs = []
     auprcs = []
@@ -150,10 +168,11 @@ if __name__ == "__main__":
     transformers_logger = logging.getLogger('transformers')
     transformers_logger.setLevel(logging.WARNING)
 
-    BERT_model = BERT_Model(25, 25)
+    BERT_model = BERT_Model(65, 65)
     BERT_model.graph_examples_distribution()
     BERT_model.train_model(train_args)
     #train_with_varied_test_validate_sizes(train_args)
     #BERT_model.train_with_varied_learning_rates(train_args)
-    #train_with_varied_epochs(train_args)
+    #BERT_model.train_with_varied_epochs(train_args)
+    #BERT_model.train_optimal(10, train_args)
 
