@@ -11,7 +11,7 @@ import matplotlib.pyplot as plot
 class BERT_Model:
     # size is number of either positive or negative examples (both should be same size based on original dataset)
     # so, actual sizes are twice of those indicated
-    DEFAULT_VALIDATE_SIZE = 30
+    DEFAULT_VALIDATE_SIZE = 20
     DEFAULT_TEST_SIZE = 20
     def __init__(self, validate_size=DEFAULT_VALIDATE_SIZE, test_size=DEFAULT_TEST_SIZE):
         self.df = pd.read_json("../MUStARD/data/sarcasm_data.json")
@@ -19,6 +19,7 @@ class BERT_Model:
         # TODO: for now, combine utterance and context and drop other features
         self.df['context'] = [' '.join(map(str, l)) for l in self.df['context']]
         self.df['text'] = self.df['context'] + ' ' + self.df['utterance']
+        self.df.drop(['speaker', 'context', 'utterance', 'context_speakers', 'show'], axis=1, inplace=True)
         self.df = self.df.rename(columns={'sarcasm': 'labels'})
         self.df['labels'] = self.df['labels'].astype(int)
 
@@ -70,20 +71,8 @@ class BERT_Model:
             aurocs.append(result['auroc'])
             auprcs.append(result['auprc'])
         
-        plot.scatter(learning_rates, accuracies)
-        plot.xlabel("Learning rate")
-        plot.ylabel("Accuracy")
-        plot.show()
-
-        plot.scatter(learning_rates, aurocs)
-        plot.xlabel("Learning rate")
-        plot.ylabel("AUROC value")
-        plot.show()
-
-        plot.scatter(learning_rates, auprcs)
-        plot.xlabel("Learning rate")
-        plot.ylabel("AUPRC value")
-        plot.show()
+        graph_hyperparam("Learning rate", learning_rates, accuracies, aurocs, auprcs)
+    
 
     def train_with_varied_epochs(self, train_args):
         num_train_epochs = np.arange(1, 6, 1)
@@ -96,26 +85,48 @@ class BERT_Model:
             accuracies.append(result['acc'])
             aurocs.append(result['auroc'])
             auprcs.append(result['auprc'])
-        
-        plot.scatter(num_train_epochs, accuracies)
-        plot.xlabel("Number of epochs")
-        plot.ylabel("Accuracy")
-        plot.show()
 
-        plot.scatter(num_train_epochs, aurocs)
-        plot.xlabel("Number of epochs")
-        plot.ylabel("AUROC value")
-        plot.show()
+        graph_hyperparam("Number of epochs", num_train_epochs, accuracies, aurocs, auprcs)
 
-        plot.scatter(num_train_epochs, auprcs)
-        plot.xlabel("Number of epochs")
-        plot.ylabel("AUPRC value")
-        plot.show()
+# ----- end of class
+
+
+def graph_hyperparam(hyperparam_label, hyperparam, accuracies, aurocs, auprcs):
+    plot.scatter(hyperparam, accuracies)
+    plot.xlabel(hyperparam_label)
+    plot.ylabel("Accuracy")
+    plot.show()
+
+    plot.scatter(hyperparam, aurocs)
+    plot.xlabel(hyperparam_label)
+    plot.ylabel("AUROC value")
+    plot.show()
+
+    plot.scatter(hyperparam, auprcs)
+    plot.xlabel(hyperparam_label)
+    plot.ylabel("AUPRC value")
+    plot.show()
+
+# note: actual sizes are twice those indicated
+def train_with_varied_test_validate_sizes(train_args):
+    sizes = np.arange(5, 60, 10)
+    accuracies = []
+    aurocs = []
+    auprcs = []
+    for size in sizes:
+        validate_size = size
+        test_size = size
+        BERT_model = BERT_Model(validate_size, test_size)
+        BERT_model.graph_examples_distribution()
+        result, model_outputs, wrong_predictions = BERT_model.train_model(train_args)
+        accuracies.append(result['acc'])
+        aurocs.append(result['auroc'])
+        auprcs.append(result['auprc'])
+    
+    graph_hyperparam("Size of test and validation sets", sizes*2, accuracies, aurocs, auprcs)
+
 
 if __name__ == "__main__":
-
-    BERT_model = BERT_Model()
-    BERT_model.graph_examples_distribution()
 
     train_args = {
         'reprocess_input_data': True,
@@ -139,7 +150,10 @@ if __name__ == "__main__":
     transformers_logger = logging.getLogger('transformers')
     transformers_logger.setLevel(logging.WARNING)
 
+    BERT_model = BERT_Model(25, 25)
+    BERT_model.graph_examples_distribution()
     BERT_model.train_model(train_args)
+    #train_with_varied_test_validate_sizes(train_args)
     #BERT_model.train_with_varied_learning_rates(train_args)
     #train_with_varied_epochs(train_args)
 
