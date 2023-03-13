@@ -34,4 +34,4 @@ test_output = df.iloc[train_size:train_size+test_size]["sarcasm"].astype(int)
 predicted = clf.predict(test_input)
 
 # results
-classification_report(test_output, predicted, output_dict=True, digits=3)
+print(classification_report(test_output, predicted, output_dict=True, digits=3))
