@@ -170,9 +170,8 @@ if __name__ == "__main__":
 
     BERT_model = BERT_Model(65, 65)
     BERT_model.graph_examples_distribution()
-    BERT_model.train_model(train_args)
+    BERT_model.train_optimal(10, train_args)
     #train_with_varied_test_validate_sizes(train_args)
-    #BERT_model.train_with_varied_learning_rates(train_args)
     #BERT_model.train_with_varied_epochs(train_args)
-    #BERT_model.train_optimal(10, train_args)
+    #BERT_model.train_with_varied_learning_rates(train_args)
 
