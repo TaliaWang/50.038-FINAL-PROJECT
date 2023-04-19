@@ -1,0 +1,20 @@
+{
+    "jupyter.kernels.filter": [
+        {
+            "path": "/home/eero/anaconda3/envs/mustard/bin/python",
+            "type": "pythonEnvironment"
+        },
+        {
+            "path": "/home/eero/.local/share/jupyter/kernels/python3/kernel.json",
+            "type": "jupyterKernelspec"
+        },
+        {
+            "path": "/bin/python3",
+            "type": "pythonEnvironment"
+        },
+        {
+            "path": "/usr/bin/python3",
+            "type": "pythonEnvironment"
+        }
+    ]
+}
