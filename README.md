@@ -6,8 +6,6 @@ Dataset repo taken from: https://github.com/soujanyaporia/MUStARD
 ## /BERT
 Go to the google colab link to view and run code: https://colab.research.google.com/drive/1XO7RJ_wLqxiFBstDuGd13xdTYu2-Ar-C?usp=sharing
 
-To run locally, the same code can be found in BERT.py, but it runs much slower without a GPU.
-
 ## /svm
 Contents
 - `run.py`: basic svm implementation
